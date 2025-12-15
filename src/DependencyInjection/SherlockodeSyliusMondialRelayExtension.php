@@ -48,4 +48,9 @@ class SherlockodeSyliusMondialRelayExtension extends Extension implements Prepen
             $container->prependExtensionConfig('twig', ['form_themes' => ['@SherlockodeSyliusMondialRelayPlugin/form_theme.html.twig']]);
         }
     }
+
+    public function getAlias(): string
+    {
+        return 'sherlockode_sylius_mondial_relay';
+    }
 }
