@@ -34,7 +34,7 @@ class MondialRelayConfigurationType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'entry_type' => MondialRelayRangeType::class,
+                'entry_type' => MondialRelayRangesType::class,
                 'entry_options' => fn (ChannelInterface $channel): array => [
                     'currency' => $channel->getBaseCurrency()->getCode(),
                     'label' => $channel->getName(),

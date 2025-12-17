@@ -36,17 +36,39 @@ export default class MondialRelay
         }
 
         this.loadCurrentPoint();
+        console.log('loaded');
+    }
+
+    getModalInstance(options = {}) {
+        return bootstrap.Modal.getOrCreateInstance(this.modal, options);
     }
 
     addEventListeners() {
-        $(this.modal).modal({
+        const modal = this.getModalInstance();
+
+
+        this.modal.addEventListener('hidden.bs.modal', () => {
+            this.clearModalContent();
+        });
+
+        const approveButton = this.modal.querySelector('[data-mondial-relay-approve]');
+        if (approveButton) {
+            approveButton.addEventListener('click', () => {
+                this.setCheckoutPickupPoint();
+                modal.hide();
+            });
+        }
+
+        //modal.show();
+
+        /*$(this.modal).modal({
             onHidden: function () {
                 this.clearModalContent();
             }.bind(this),
             onApprove: function () {
                 this.setCheckoutPickupPoint();
             }.bind(this)
-        });
+        });*/
 
         this.shippingMethodForm.addEventListener('change', function () {
             if (this.isMondialRelayMethodSelected()) {
@@ -70,7 +92,7 @@ export default class MondialRelay
         document.addEventListener('click', function (event) {
             // Click to close modal
             if (-1 !== [].indexOf.call(this.modal.querySelectorAll('.close-modal'), event.target)) {
-                $(this.modal).modal('hide');
+                this.getModalInstance().modal('hide');
 
                 return;
             }
@@ -177,7 +199,7 @@ export default class MondialRelay
                 this.modal.querySelector('button[data-mr-geolocalisation]').style.display = 'none';
             }
 
-            $(this.modal).modal('show');
+            this.getModalInstance().modal('show');
 
             this.onSearchResultsUpdated(response.points || []);
         }.bind(this));

@@ -12,7 +12,7 @@
         "ext-curl": "*",
         "ext-soap": "*",
         "php": "^8.2",
-        "sylius/sylius": "~2.0.0"
+        "sylius/sylius": "~2.1.0"
     },
     "config": {
         "sort-packages": true
