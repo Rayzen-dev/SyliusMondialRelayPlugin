@@ -15,10 +15,15 @@ sylius_twig_hooks:
                 template: "@SherlockodeSyliusMondialRelayPlugin/Admin/_javascripts.html.twig"
                 priority: -100
 
-        sylius_shop.checkout.select_shipping.content.form.shipments.shipment:
+        sylius_shop.checkout.select_shipping:
             mondial_relay:
                 template: "@SherlockodeSyliusMondialRelayPlugin/Checkout/_modal.html.twig"
                 priority: -100
+
+        sylius_shop.checkout.select_shipping.content.form.shipments.shipment:
+            mondial_relay:
+                template: "@SherlockodeSyliusMondialRelayPlugin/Checkout/_shipments_entry_method_widget.html.twig"
+                priority: -10
 
         sylius_shop.base#javascripts:
             mondial_relay:

@@ -1,5 +1,4 @@
 {% block _sylius_checkout_select_shipping_shipments_entry_method_entry_widget %}
-    {{ dump('lol') }}
     {% if form.vars.attr['data-mr'] is defined %}
         {% include '@SherlockodeSyliusMondialRelayPlugin/Checkout/_pickup_point_form_widget.html.twig' with {'form': form.parent.parent} only %}
         <div id="current-pickup-point" class="mr-current-pickup-point-card" style="display: none;">

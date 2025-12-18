@@ -6,7 +6,7 @@ export default class MondialRelay
 {
     constructor(options) {
         options = options || {};
-        this.shippingMethodForm = document.querySelector('form[name="sylius_checkout_select_shipping"]');
+        this.shippingMethodForm = document.querySelector('form[name="sylius_shop_checkout_select_shipping"]');
         this.modal = document.getElementById('modal-mondial-relay');
         this.itemsPerPage = options.itemsPerPage || 6;
         this.currentPage = 1;
@@ -36,7 +36,6 @@ export default class MondialRelay
         }
 
         this.loadCurrentPoint();
-        console.log('loaded');
     }
 
     getModalInstance(options = {}) {
@@ -46,9 +45,12 @@ export default class MondialRelay
     addEventListeners() {
         const modal = this.getModalInstance();
 
-
         this.modal.addEventListener('hidden.bs.modal', () => {
             this.clearModalContent();
+        });
+
+        this.modal.addEventListener('shown.bs.modal', () => {
+            //this.mapAdapter.invalidateSize();
         });
 
         const approveButton = this.modal.querySelector('[data-mondial-relay-approve]');
@@ -58,17 +60,6 @@ export default class MondialRelay
                 modal.hide();
             });
         }
-
-        //modal.show();
-
-        /*$(this.modal).modal({
-            onHidden: function () {
-                this.clearModalContent();
-            }.bind(this),
-            onApprove: function () {
-                this.setCheckoutPickupPoint();
-            }.bind(this)
-        });*/
 
         this.shippingMethodForm.addEventListener('change', function () {
             if (this.isMondialRelayMethodSelected()) {
@@ -92,7 +83,7 @@ export default class MondialRelay
         document.addEventListener('click', function (event) {
             // Click to close modal
             if (-1 !== [].indexOf.call(this.modal.querySelectorAll('.close-modal'), event.target)) {
-                this.getModalInstance().modal('hide');
+                this.getModalInstance().hide();
 
                 return;
             }
@@ -112,7 +103,7 @@ export default class MondialRelay
             }
 
             // Geolocation
-            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('button[data-mr-geolocalisation]'), event.target)) {
+            if (-1 !== [].indexOf.call(this.modal.querySelectorAll('button[data-mr-geolocation]'), event.target)) {
                 this.geolocation();
 
                 return;
@@ -192,21 +183,21 @@ export default class MondialRelay
 
         request.send().then(function (rawResponse) {
             let response = JSON.parse(rawResponse);
-            this.modal.querySelector('.content').innerHTML = response.form || '';
+            this.modal.querySelector('.modal-body').innerHTML = response.form || '';
 
             if (!this.mapProvider) {
                 this.modal.querySelector('.pickup-points-map').style.display = 'none';
-                this.modal.querySelector('button[data-mr-geolocalisation]').style.display = 'none';
+                this.modal.querySelector('button[data-mr-geolocation]').style.display = 'none';
             }
 
-            this.getModalInstance().modal('show');
+            this.getModalInstance().show();
 
             this.onSearchResultsUpdated(response.points || []);
         }.bind(this));
     }
 
     clearModalContent() {
-        this.modal.querySelector('.content').innerHTML = '';
+        this.modal.querySelector('.modal-body').innerHTML = '';
 
         if (null !== this.mapAdapter) {
             this.mapAdapter = null;
@@ -254,7 +245,7 @@ export default class MondialRelay
             return;
         }
 
-        let btn = this.modal.querySelector('button[data-mr-geolocalisation]');
+        let btn = this.modal.querySelector('button[data-mr-geolocation]');
         btn.setAttribute('disabled', 'disabled');
 
         navigator.geolocation.getCurrentPosition(
@@ -284,6 +275,7 @@ export default class MondialRelay
     search() {
         let form = this.modal.querySelector('form.search-pickup-point-form');
 
+        console.log(form);
         let request = new AjaxRequest(
                 form.getAttribute('action'),
                 form.getAttribute('method').toUpperCase(),
